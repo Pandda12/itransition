@@ -43,12 +43,13 @@ class ProductImport implements ToModel, WithUpserts, WithHeadingRow
             'Product Description' => $productDescKey,
             'Stock' => $productStockKey,
             'Cost in GBP' => $productPriceKey,
-            'Discontinued' => $productDiscontinuedKey
+//            'Discontinued' => $productDiscontinuedKey
         ];
+
 
         // Check headers
         foreach ( $headers as $key => $value  ) {
-            if ( !isset( $value ) ) {
+            if ( !isset( $row[$value] ) ) {
                 echo 'Column "' . $key . '" not found' . PHP_EOL;
                 return null;
             }
@@ -60,7 +61,7 @@ class ProductImport implements ToModel, WithUpserts, WithHeadingRow
         $price = number_format( floatval( $row[$productPriceKey] ), 2, '.', '');
 
         // Check if cost and stock meet the specified criteria
-        if ( ( $price < 5 || $stock < 10 ) || $price > 1000 ) {
+        if ( ( $price < 5 && $stock < 10 ) || $price > 1000 ) {
             $this->skipped++;
             echo 'Product with sku: ' . $sku . '. Was skipped' . PHP_EOL;
             return null; // Skip importing this item
